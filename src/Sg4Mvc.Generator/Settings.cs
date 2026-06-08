@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -6,6 +7,8 @@ namespace Sg4Mvc.Generator;
 
 public class Settings : IEquatable<Settings>
 {
+    public const String SettingsFileName = "sg4mvc.json";
+
     public String _generatedByVersion { get; set; }
     public Boolean ShouldSerialize_generatedByVersion() => UpdateGeneratedByVersion;
     public Boolean UpdateGeneratedByVersion { get; set; } = true;

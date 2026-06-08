@@ -9,9 +9,6 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Sg4Mvc.Generator.Extensions;
 
-/// <summary>
-/// A collection of helper and fluent extension methods to help manipulate SyntaxNodes
-/// </summary>
 public static class SyntaxNodeHelpers
 {
     public static Boolean InheritsFrom(this ITypeSymbol symbol, String fullName)
@@ -68,15 +65,12 @@ public static class SyntaxNodeHelpers
 
     public static Boolean IsNotSg4MvcGenerated(this ISymbol method)
     {
-        return !method.GetAttributes()
-            .Any(a => a.AttributeClass.InheritsFrom<GeneratedCodeAttribute>());
+        return !method.GetAttributes().Any(a => a.AttributeClass.InheritsFrom<GeneratedCodeAttribute>());
     }
 
     public static Boolean IsNotSg4MvcExcluded(this ISymbol method)
     {
-        return !method.GetAttributes()
-            .Any(a => a.AttributeClass.InheritsFrom("Microsoft.AspNetCore.Mvc.Sg4MvcExcludeAttribute")
-                || a.AttributeClass.Name == "Sg4MvcExclude");
+        return !method.GetAttributes().Any(a => a.AttributeClass.InheritsFrom("Microsoft.AspNetCore.Mvc.Sg4MvcExcludeAttribute") || a.AttributeClass.Name == "Sg4MvcExclude");
     }
 
     public static FrameworkMethodNames GetFrameworkMethodNames(Compilation compilation)
@@ -86,8 +80,7 @@ public static class SyntaxNodeHelpers
             List<String> result = [];
             while (typeSymbol != null)
             {
-                result.AddRange(typeSymbol.GetMembers()
-                    .Where(r => r.Kind == SymbolKind.Method
+                result.AddRange(typeSymbol.GetMembers().Where(r => r.Kind == SymbolKind.Method
                         && r.DeclaredAccessibility == Accessibility.Public
                         && r.IsVirtual)
                     .Select(s => s.Name));
@@ -99,9 +92,7 @@ public static class SyntaxNodeHelpers
         var controllerType = compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller");
         var pageType = compilation.GetTypeByMetadataName(FullTypeNames.PageModel);
 
-        return new FrameworkMethodNames(
-            ExtractVirtualPublicMethods(controllerType),
-            ExtractVirtualPublicMethods(pageType));
+        return new FrameworkMethodNames(ExtractVirtualPublicMethods(controllerType), ExtractVirtualPublicMethods(pageType));
     }
 
     public static Boolean IsMvcAction(this IMethodSymbol method, FrameworkMethodNames names)
